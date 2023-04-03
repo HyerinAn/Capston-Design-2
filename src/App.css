@@ -49,15 +49,26 @@
   }
 }
 
+#cctvmarker{
+  width: 600px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+} 
+
+
 .dot {
 
   border-radius: 50%;
   background-color: deepskyblue;
   width: 150px;
   height: 150px;
-  position: absolute;
-  /*z-index: 1;*/
+  position: absolute; 
+  z-index: 3;
   opacity: 0;
-  animation: scaleIn 4s infinite cubic-bezier(.36, .11, .89, .32);
+  animation: scaleIn 4s infinite cubic-bezier(.36, .11, .89, .32); 
   
 }

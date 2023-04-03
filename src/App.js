@@ -10,6 +10,7 @@ const { kakao } = window;
 function Kakao(){
 
 
+  // widnow 창 resize 조정 부분
   const [windowDimension, detectW] = useState({
     winWidth: window.innerWidth,
     winHeight: window.innerHeight,
@@ -35,7 +36,7 @@ useEffect(() => {
 
   const db = firestore.collection("map"); // firestore collection 접근
 
-
+  // firestore에 있는 data 불러오는 부분 -> 해당 data 이용하는 함수 생성 시 이 안에서 짜야함
   db.get().then((result) => { result.forEach( (allDoc) => {
 
     console.log(allDoc.data());
@@ -44,30 +45,20 @@ useEffect(() => {
     const cctvPosition = new kakao.maps.LatLng(allDoc.data().latitude, allDoc.data().longitude);
     console.log(allDoc.data());
 
-    // 지도에 표시할 원을 생성합니다
-    var circle = new kakao.maps.Circle({
-      center : cctvPosition,  // 원의 중심좌표 입니다 
-      radius: 30, // 미터 단위의 원의 반지름입니다 
-      // strokeWeight: 5, // 선의 두께입니다 
-      // strokeColor: '#75B8FA', // 선의 색깔입니다
-      strokeOpacity: 0, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-      // strokeStyle: 'dashed', // 선의 스타일 입니다
-      fillColor: '#81c147', // 채우기 색깔입니다
-      fillOpacity: 0.7,  // 채우기 불투명도 입니다
-    }); 
-
-
-    var content = '<div class ="dot" style="animation-delay: -3s">';
+    // cctvmarker 마우스오버 시 그려질 circle animation 부분
+    var content = '<div id = "cctvmarker">';
+    content += '<div class ="dot" style="animation-delay: -3s">';
     content += '</div><div class ="dot" style="animation-delay: -2s"></div>'; 
     content += '<div class ="dot" style="animation-delay: -1s"></div>';
     content += '<div class ="dot" style="animation-delay: 0s"></div>';
+    content += '<div/>';
 
+    // circle 그리는 함수
     var cctvInfo = new kakao.maps.CustomOverlay({
       position: cctvPosition,
       content: content,
-      xAnchor: 0.3,
-      yAnchor: 0.91
   });
+
 
   var cctvimg = '/image/cctv.png';
 
@@ -98,27 +89,21 @@ useEffect(() => {
     displayMarker(locPosition, mylocationimg);
   }
   
-  // 마커 표시 함수
+  // 현위치 마커 표시 함수
   function displayMarker(locPosition, imageaddress) {
   
     var imageSrc = imageaddress;
     var imageSize = new kakao.maps.Size(40,40);
     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-  
-    // var imageSrc = "/img/marker.png", 
-    //   imageSize = new kakao.maps.Size(24, 35); // 마커이미지의 크기
-    //   imageOption = {offset: new kakao.maps.Point(24, 35)}; 
-  
-    // var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize)
     
-    // 마커를 생성합니다
+    // 현위치 마커를 생성
     var marker = new kakao.maps.Marker({  
         map: map, 
         position: locPosition,
         image: markerImage
     }); 
   
-    // 지도 중심좌표를 접속위치로 변경합니다
+    // 중심좌표를 접속위치로 변경
     map.setCenter(locPosition);     
     
   }
@@ -129,25 +114,26 @@ useEffect(() => {
       var imageSize = new kakao.maps.Size(40,40);
       var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
       
-      // 마커를 생성합니다
+      // cctvmarker 생성
       var cctvmarker = new kakao.maps.Marker({  
           map: map, 
           position: cctvPosition,
-          image: markerImage
+          image: markerImage,
+          zIndex: 2,
       }); 
 
       map.setCenter(cctvPosition); 
 
- // 마커에 마우스오버 이벤트를 등록합니다
+ // cctvmarker 마우스오버 시 circle animation 그려짐
 kakao.maps.event.addListener(cctvmarker, 'mouseover', function() {
 
-    cctvInfo.setMap(map);
+     cctvInfo.setMap(map);
 });
 
-// 마커에 마우스아웃 이벤트를 등록합니다
+// 마우스아웃 시 circle 사라짐
 kakao.maps.event.addListener(cctvmarker, 'mouseout', function() {
 
-  cctvInfo.setMap(null);
+    cctvInfo.setMap(null);
   
 });
    
@@ -172,7 +158,7 @@ kakao.maps.event.addListener(cctvmarker, 'mouseout', function() {
   style={{
     width:'100%', 
     height:'100vh',
-    position: 'relative'
+    position: 'relative',
   }}
   >
   </div>
