@@ -34,11 +34,11 @@ function Kakao(){
     var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
     
     //처음에 옆에 창 안열리게 설정
-    // document.getElementById("first").style.display="none";
+    document.getElementById("first").style.display="none";
     //test위한 default 설정(디자인 확인하려고)
-    document.getElementById("viewimg").style.backgroundImage='url("/place_img/용봉탑.png")';
-    document.getElementById("place_name").innerHTML = '전남대 용봉탑';
-    document.getElementById("people_cnt").innerHTML = 'test하는 중..';
+    // document.getElementById("viewimg").style.backgroundImage='url("/place_img/용봉탑.png")';
+    // document.getElementById("place_name").innerHTML = '전남대 용봉탑';
+    // document.getElementById("people_cnt").innerHTML = 'test하는 중..';
 
   if (navigator.geolocation) {
       
@@ -160,24 +160,44 @@ function Kakao(){
     });
 
   //오버레이를 element 생성하여 만듦(그래야 오버레이 닫아짐)
-  var content = document.createElement('div');
-  content.className = "customoverlay";
-  var anchor = document.createElement('a');
-  anchor.href = 'https://map.kakao.com/link/map/11394059';
-  anchor.target="_blank"
-  content.appendChild(anchor);
-  var info = document.createElement('span');
-  info.className = "title";
-  info.appendChild(document.createTextNode(positions[i].title))
-  anchor.appendChild(info);
-  var closeBtn = document.createElement('button');
-  closeBtn.appendChild(document.createTextNode('닫기'));
-  content.appendChild(closeBtn);
+  // var content = document.createElement('div');
+  // content.className = "customoverlay";
+  // var anchor = document.createElement('a');
+  // anchor.href = 'https://map.kakao.com/link/map/11394059';
+  // anchor.target="_blank"
+  // content.appendChild(anchor);
+  // var info = document.createElement('span');
+  // info.className = "title";
+  // info.appendChild(document.createTextNode(positions[i].title))
+  // anchor.appendChild(info);
+  // var closeBtn = document.createElement('button');
+  // closeBtn.appendChild(document.createTextNode('닫기'));
+  // content.appendChild(closeBtn);
+
+  var outercontainer = document.createElement("div");
+  var container = document.createElement('div');
+  container.id = "container";
+  outercontainer.appendChild(container);
+  var circle1 = document.createElement('div');
+  var circle2 = document.createElement('div');
+  var circle3 = document.createElement('div');
+  var circle4 = document.createElement('div');
+  circle1.style.animationDelay="-3s";
+  circle2.style.animationDelay="-2s";
+  circle3.style.animationDelay="-1s";
+  circle4.style.animationDelay="0s";
+  circle1.className = "circle";
+  circle2.className = "circle";
+  circle3.className = "circle";
+  circle4.className = "circle";
+  container.appendChild(circle1)
+  container.appendChild(circle2)
+  container.appendChild(circle3)
+  container.appendChild(circle4)
 
   var overlay = new kakao.maps.CustomOverlay({
-    content: content,
-    position: positions[i].lating,
-    yAnchor : 1     
+    content: outercontainer,
+    position: marker.getPosition() 
   });
 
     markers.push(marker);
@@ -186,7 +206,9 @@ function Kakao(){
     // 이벤트 리스너로는 클로저를 만들어 등록합니다 
     // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
     // kakao.maps.event.addListener(marker, 'click', clicklistener(map, overlay)); 
-    closeBtn.addEventListener('click', makeOutListener(overlay));
+    // closeBtn.addEventListener('click', makeOutListener(overlay));
+    kakao.maps.event.addListener(marker, 'mouseover', clicklistener(map, overlay)); 
+    kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(overlay)); 
     kakao.maps.event.addListener(marker, 'click', openwd(positions[i].imageSrc, positions[i].title));
   }
 

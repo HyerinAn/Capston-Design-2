@@ -37,7 +37,7 @@
   }
 }
 
-.customoverlay{
+/* .customoverlay{
   position: relative;
   bottom: 50px;
   border-radius: 6px;
@@ -73,4 +73,34 @@
   margin-left:-12px;
   left:50%;bottom:-12px;
   width:22px;height:12px;
-  background:url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
+  background:url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')} */
+#container {
+    /* top:0;left:0;bottom:0; */
+    width: 600px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: absolute;
+    transform: translate(-50%, -50%);
+  }
+.circle {
+    border-radius: 50%;
+    background-color: deepskyblue;
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    opacity: 0;
+    animation: scaleIn 4s infinite cubic-bezier(.36, .11, .89, .32);
+}
+@keyframes scaleIn {
+    from {
+      transform: scale(.5, .5);
+      opacity: .5;
+    }
+    to {
+      transform: scale(2.5, 2.5);
+      opacity: 0;
+    }
+  }
