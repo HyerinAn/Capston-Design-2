@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 
 import React, {useEffect, useState} from "react";
+import Makemenu from "./component/nav";
 import { firestore } from "./firebase";
 import $ from 'jquery';
 
@@ -23,8 +24,6 @@ function Kakao(){
   useEffect(() => {
   
     const db = firestore.collection("map"); // firestore collection 접근
-  
-    // db.doc("cctv").get().then((doc) => {
     
     var container = document.getElementById('map'), //지도를 담을 영역의 DOM 레퍼런스
     options = { 
@@ -33,6 +32,13 @@ function Kakao(){
     };
   
     var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+    
+    //처음에 옆에 창 안열리게 설정
+    // document.getElementById("first").style.display="none";
+    //test위한 default 설정(디자인 확인하려고)
+    document.getElementById("viewimg").style.backgroundImage='url("/place_img/용봉탑.png")';
+    document.getElementById("place_name").innerHTML = '전남대 용봉탑';
+    document.getElementById("people_cnt").innerHTML = 'test하는 중..';
 
   if (navigator.geolocation) {
       
@@ -91,23 +97,36 @@ function Kakao(){
   //   image : markerImage
   // });
 
+  //사진 담을 div를 아이디로 불러옴
+  var viewimg = document.getElementById("viewimg");
+  //장소 이름 적을 span을 아이디로 불러옴
+  var place_name = document.getElementById("place_name");
+  place_name.appendChild(document.createTextNode(""));
+
   //마커 여러개의 위치
   var positions = [
     {
       title:'전남대 용봉탑',
-      lating: new kakao.maps.LatLng(35.1751, 126.9059)
+      lating: new kakao.maps.LatLng(35.1751, 126.9059),
+      imageSrc:"/place_img/용봉탑.png"
+      // title:'동래역 자이 아파트 앞',
+      // lating: new kakao.maps.LatLng(35.20632793760689, 129.0807318037113),
+      // imageSrc:"/place_img/용봉탑.png"
     },
     {
       title:'도서관 정보마루',
-      lating: new kakao.maps.LatLng(35.1766, 126.9057)
+      lating: new kakao.maps.LatLng(35.1766, 126.9057),
+      imageSrc:"/place_img/정보마루.jpg"
     },
     {
       title:'공과대학 7호관',
-      lating: new kakao.maps.LatLng(35.1782, 126.9092)
+      lating: new kakao.maps.LatLng(35.1782, 126.9092),
+      imageSrc:"/place_img/공대7.jpg"
     },
     {
       title:'전남대학교 생활관',
-      lating: new kakao.maps.LatLng(35.1809, 126.9054)
+      lating: new kakao.maps.LatLng(35.1809, 126.9054),
+      imageSrc:"/place_img/기숙사.png"
     }
   ]
 
@@ -166,8 +185,9 @@ function Kakao(){
     // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
     // 이벤트 리스너로는 클로저를 만들어 등록합니다 
     // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-    kakao.maps.event.addListener(marker, 'click', clicklistener(map, overlay)); 
+    // kakao.maps.event.addListener(marker, 'click', clicklistener(map, overlay)); 
     closeBtn.addEventListener('click', makeOutListener(overlay));
+    kakao.maps.event.addListener(marker, 'click', openwd(positions[i].imageSrc, positions[i].title));
   }
 
   // 마커 클러스터러를 생성합니다 
@@ -185,12 +205,29 @@ function clicklistener(map, overlay) {
   overlay.setMap(map);
   }
 }
-// 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+// 오버레이를 닫는 클로저를 만드는 함수입니다 
 function makeOutListener(overlay) {
   return function(){
     overlay.setMap(null);
     }
 }
+
+// 옆에 창 여는 클로저를 만드는 함수
+function openwd(src, name) {
+  return function(){
+    document.getElementById("first").style.display="block";
+    viewimg.style.backgroundImage="url("+src+")";
+    document.getElementById("place_name").innerHTML = name;
+    document.getElementById("people_cnt").innerHTML = 'test하는 중..';
+    }
+}
+
+var close_btn = document.getElementById("close_btn");
+close_btn.addEventListener('click',function(){
+    document.getElementById("first").style.display="none";
+})
+
+// viewimg.style.backgroundImage='url("/img/marker.png")';
 
     window.addEventListener('resize', detectSize)
     return() => {
@@ -200,13 +237,11 @@ function makeOutListener(overlay) {
   }, [windowDimension])
   
     return(  
-    <div id='map'
-    style={{
-      width:'100%', 
-      height:'650px'}}
-    >
-    </div>
-    )
+      <div>
+        <div id='map'style={{width:'100%', height:'100vh', position:'relative'}}></div>
+        <Makemenu></Makemenu>
+      </div>
+      )
   }
 
-  export default Kakao;
+export default Kakao;

@@ -1,0 +1,80 @@
+#first{
+        position:absolute;top:0;left:0;bottom:0;width:433px;z-index: 1;
+      }
+#menu_wrap {position:absolute;top:0;left:0;bottom:0;width:390px;
+        background:#fff; z-index: 1;overflow-x:hidden; overflow-y:auto;
+        box-shadow: 0 0 5px 0 rgba(0,0,0,.2),
+        5px 0 15px 0 rgba(0,0,0,.2);
+        box-sizing: border-box;
+    }
+    #menu_wrap::-webkit-scrollbar{
+        width: 6px;
+    }
+    #menu_wrap::-webkit-scrollbar-thumb{
+        border-radius: 3px;
+        background: #c4c6c8;
+    }
+    #menu_wrap::-webkit-scrollbar-track-piece{
+        background: #e9ecef;
+    }
+#close_btn {
+        position:absolute;right:0;height: 44px; top:75px;
+        width:43px; background:#fff; border-radius: 0 4px 4px 0; z-index: 1;
+        border: 1px solid rgba(0,0,0,.2); border-left: 0; cursor: pointer;
+        box-shadow: 0 3px 7px 0 rgba(0,0,0,.2);
+      }
+#close_btn:hover{
+        border: 1px solid #0475f4; border-left: 0;
+      }
+#close_btn:hover img{
+    filter: invert(37%) sepia(57%) saturate(4660%) hue-rotate(197deg) brightness(94%) contrast(106%);
+}
+img{
+        position:relative; top:28%; left:34%; z-index: 1;
+      }
+#menu{
+        width: 384.8px; height: 721.9px; z-index: inherit
+    }
+#viewimg{
+    width: 384.8px; 
+    height: 228px; 
+    /* height: 721.6px; */
+    /* background: url("../../public/img/marker.png") no-repeat; */
+    background: no-repeat;
+    background-size: contain; background-position: 50% 50%;
+}
+#placebox{
+    width: 348.8px;
+    height: 27px;
+    padding: 16px 18px 14px;
+    text-align: center;
+}
+#placebox::after{
+    content: "";
+    display: block;
+    width: 340px;
+    border-bottom: 1px solid #bcbcbc;
+    margin: 15px 5px;
+}
+#placebox span{
+    color: rgb(0,0,0);
+    text-align: center;
+    font-family: -apple-system,BlinkMacSystemFont,helvetica,"Apple SD Gothic Neo",sans-serif;
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+#peoplebox {
+    width: 348.8px;
+    height: 58.45px;
+    padding: 16px 18px 14px;
+    text-align: center;
+}
+#peoplebox span{
+    color: rgb(0,0,0);
+    text-align: center;
+    font-family: -apple-system,BlinkMacSystemFont,helvetica,"Apple SD Gothic Neo",sans-serif;
+    font-size: 20px;
+    font-weight: 550;
+    letter-spacing: -1px;
+}
