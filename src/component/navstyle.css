@@ -18,7 +18,7 @@
         background: #e9ecef;
     }
 #close_btn {
-        position:absolute;right:0;height: 44px; top:75px;
+        position:absolute;left: 780px; height: 44px; top:75px;
         width:43px; background:#fff; border-radius: 0 4px 4px 0; z-index: 1;
         border: 1px solid rgba(0,0,0,.2); border-left: 0; cursor: pointer;
         box-shadow: 0 3px 7px 0 rgba(0,0,0,.2);
@@ -77,4 +77,29 @@ img{
     font-size: 20px;
     font-weight: 550;
     letter-spacing: -1px;
+}
+
+#chart_wrap {position:absolute;top:0;left:390px;bottom:0;width:390px;
+    background:#fff; z-index: 1;overflow-x:hidden; overflow-y:auto;
+    box-shadow: 0 0 5px 0 rgba(0,0,0,.2),
+    5px 0 15px 0 rgba(0,0,0,.2);
+    box-sizing: border-box;
+}
+#chart_wrap::-webkit-scrollbar{
+    width: 6px;
+}
+#chart_wrap::-webkit-scrollbar-thumb{
+    border-radius: 3px;
+    background: #c4c6c8;
+}
+#chart_wrap::-webkit-scrollbar-track-piece{
+    background: #e9ecef;
+}
+
+#chart{
+    width: 348.8px;
+    height: 60.45px;
+    padding: 16px 18px 14px;
+    text-align: center;
+
 }
