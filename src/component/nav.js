@@ -21,7 +21,11 @@ function Makemenu(){
                         <span id="place_name"></span>
                     </div>
                     <div id="peoplebox">
-                        <span id="people_cnt"></span>
+                        <a id="people_cnt">유동 인구 수 : </a>
+                    </div>
+                    <div id="timebox">
+                        <span id="time_now"></span>
+                        <img id="refresh" src="/img/reload.png" width="17px" height="17px"></img>
                     </div>
                 </div>
             </div>

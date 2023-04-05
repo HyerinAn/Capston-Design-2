@@ -1,9 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
 
-import React, {useEffect, useState} from "react";
+import React, {Children, useEffect, useState} from "react";
 import Makemenu from "./component/nav";
-import { firestore } from "./firebase";
+import { firestore,database } from "./firebase";
 import $ from 'jquery';
 
 const { kakao } = window;
@@ -106,6 +106,7 @@ function Kakao(){
   //마커 여러개의 위치
   var positions = [
     {
+      num:0,
       title:'전남대 용봉탑',
       lating: new kakao.maps.LatLng(35.1751, 126.9059),
       imageSrc:"/place_img/용봉탑.png"
@@ -114,41 +115,62 @@ function Kakao(){
       // imageSrc:"/place_img/용봉탑.png"
     },
     {
+      num:1,
       title:'도서관 정보마루',
       lating: new kakao.maps.LatLng(35.1766, 126.9057),
       imageSrc:"/place_img/정보마루.jpg"
     },
     {
+      num:2,
       title:'공과대학 7호관',
       lating: new kakao.maps.LatLng(35.1782, 126.9092),
       imageSrc:"/place_img/공대7.jpg"
     },
     {
+      num:3,
       title:'전남대학교 생활관',
       lating: new kakao.maps.LatLng(35.1809, 126.9054),
       imageSrc:"/place_img/기숙사.png"
     }
-  ]
+  ];
 
-  //오버레이 만드는 코드
-  // for(var i=0; i<positions.length; i++){
-    // var content = '<div class="customoverlay">' +
-    // '  <a href="https://map.kakao.com/link/map/11394059" target="_blank">' +
-    // '    <span class="title">구의야구공원</span>' +
-    // '  </a>' +
-    // '</div>';
-  
-  // var overlay = new kakao.maps.CustomOverlay({
-  //   content: content,
-  //   position: positions[i].lating,
-  //   yAnchor : 1     
-  // });
+  var linePaths = [
+    {
+      //선을 구성하는 좌표 배열입니다. 이 좌표들을 이어서 선을 표시합니다
+      linePath : [
+        new kakao.maps.LatLng(35.17501071921674 , 126.90599208081575),
+        new kakao.maps.LatLng(35.173468856972 , 126.90529678225698)
+      ]
+    },
+    {
+      linePath : [
+        new kakao.maps.LatLng(35.176443121768955 , 126.90502437361847),
+        new kakao.maps.LatLng(35.1762089690736 , 126.90527988219107),
+        new kakao.maps.LatLng(35.17595690419236 , 126.90568361124701)
+      ]
+    },
+    {
+      linePath : [
+        new kakao.maps.LatLng(35.17786570083091 , 126.9088540848093),
+        new kakao.maps.LatLng(35.17824958388012 , 126.90993226223246)
+      ]
+    },
+    {
+      linePath : [
+        new kakao.maps.LatLng(35.18057864183477 , 126.90572493118653),
+        new kakao.maps.LatLng(35.18070980046131 , 126.90632036379202)
+      ]
+    }
+  ];
   
   //클러스터러 위해서 존재하는 마크를 다 담음
   var markers = [];
   var imageSrc = "/img/marker.png"
   var imageSize = new kakao.maps.Size(40,40);
   var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+  var polylines = [];
+  var lines = [];
 
   //마커 여러개 만드는 코드
   for(var i=0; i<positions.length; i++){
@@ -158,6 +180,23 @@ function Kakao(){
       title : positions[i].title, 
       image:markerImage
     });
+
+    // 지도에 표시할 선을 생성합니다
+  var polyline = new kakao.maps.Polyline({
+    path: linePaths[i].linePath, // 선을 구성하는 좌표배열 입니다
+    strokeWeight: 6, // 선의 두께 입니다
+    strokeColor: '#386de8', // 선의 색깔입니다
+    strokeOpacity: 1.0, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+    strokeStyle: 'solid' // 선의 스타일입니다
+  });
+
+  var line = new kakao.maps.Polyline({
+    path: linePaths[i].linePath, // 선을 구성하는 좌표배열 입니다
+    strokeWeight: 7.5, // 선의 두께 입니다
+    strokeColor: 'black', // 선의 색깔입니다
+    strokeOpacity: 1.0, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+    strokeStyle: 'solid' // 선의 스타일입니다
+  });
 
   //오버레이를 element 생성하여 만듦(그래야 오버레이 닫아짐)
   // var content = document.createElement('div');
@@ -174,42 +213,23 @@ function Kakao(){
   // closeBtn.appendChild(document.createTextNode('닫기'));
   // content.appendChild(closeBtn);
 
-  var outercontainer = document.createElement("div");
-  var container = document.createElement('div');
-  container.id = "container";
-  outercontainer.appendChild(container);
-  var circle1 = document.createElement('div');
-  var circle2 = document.createElement('div');
-  var circle3 = document.createElement('div');
-  var circle4 = document.createElement('div');
-  circle1.style.animationDelay="-3s";
-  circle2.style.animationDelay="-2s";
-  circle3.style.animationDelay="-1s";
-  circle4.style.animationDelay="0s";
-  circle1.className = "circle";
-  circle2.className = "circle";
-  circle3.className = "circle";
-  circle4.className = "circle";
-  container.appendChild(circle1)
-  container.appendChild(circle2)
-  container.appendChild(circle3)
-  container.appendChild(circle4)
-
-  var overlay = new kakao.maps.CustomOverlay({
-    content: outercontainer,
-    position: marker.getPosition() 
-  });
+  // var overlay = new kakao.maps.CustomOverlay({
+  //   content: content,
+  //   position: marker.getPosition() 
+  // });
 
     markers.push(marker);
+    polylines.push(polyline);
+    lines.push(line);
 
     // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
     // 이벤트 리스너로는 클로저를 만들어 등록합니다 
     // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
     // kakao.maps.event.addListener(marker, 'click', clicklistener(map, overlay)); 
     // closeBtn.addEventListener('click', makeOutListener(overlay));
-    kakao.maps.event.addListener(marker, 'mouseover', clicklistener(map, overlay)); 
-    kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(overlay)); 
-    kakao.maps.event.addListener(marker, 'click', openwd(positions[i].imageSrc, positions[i].title));
+    // kakao.maps.event.addListener(marker, 'mouseover', clicklistener(map, overlay)); 
+    // kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(overlay)); 
+    kakao.maps.event.addListener(marker, 'click', openwd(positions[i].imageSrc, positions[i].title, i, polylines, lines));
   }
 
   // 마커 클러스터러를 생성합니다 
@@ -235,15 +255,55 @@ function makeOutListener(overlay) {
 }
 
 // 옆에 창 여는 클로저를 만드는 함수
-function openwd(src, name) {
+function openwd(src, name, i, polylines, lines) {
   return function(){
     document.getElementById("first").style.display="block";
     viewimg.style.backgroundImage="url("+src+")";
     document.getElementById("place_name").innerHTML = name;
-    document.getElementById("people_cnt").innerHTML = 'test하는 중..';
-    }
+    const db = database.ref('hyein_test');
+    db.once('value').then(function(snapshot){
+      snapshot.forEach(function(childSnapshot){
+        // == name으로 해도 됨
+        if(childSnapshot.key == i){
+          // console.log(childSnapshot.key);
+          var people_info = childSnapshot.val()
+          for (const [key, value] of Object.entries(people_info)){
+                  document.getElementById("people_cnt").innerHTML = "유동 인구 수 : " + value + "명";
+                  document.getElementById("time_now").innerHTML = key;
+                }
+        }
+      })
+      })
+      document.getElementById("people_cnt").addEventListener('click',viewline(i));
+      document.getElementById("people_cnt").addEventListener('click',()=>{
+        lines[i].setMap(map);
+        polylines[i].setMap(map);
+      });
+  }
 }
 
+function viewline(i){
+  var polyline = new kakao.maps.Polyline({
+    path: linePaths[i].linePath, // 선을 구성하는 좌표배열 입니다
+    strokeWeight: 6, // 선의 두께 입니다
+    strokeColor: '#386de8', // 선의 색깔입니다
+    strokeOpacity: 1.0, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+    strokeStyle: 'solid' // 선의 스타일입니다
+  });
+
+  var line = new kakao.maps.Polyline({
+    path: linePaths[i].linePath, // 선을 구성하는 좌표배열 입니다
+    strokeWeight: 7.5, // 선의 두께 입니다
+    strokeColor: 'black', // 선의 색깔입니다
+    strokeOpacity: 1.0, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+    strokeStyle: 'solid' // 선의 스타일입니다
+  });
+  line.setMap(null);
+  polyline.setMap(null);
+}
+
+
+//닫기 버튼 누르면 옆에 창 사라지게 함
 var close_btn = document.getElementById("close_btn");
 close_btn.addEventListener('click',function(){
     document.getElementById("first").style.display="none";

@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css); 
 #first{
         position:absolute;top:0;left:0;bottom:0;width:433px;z-index: 1;
       }
@@ -29,7 +30,7 @@
 #close_btn:hover img{
     filter: invert(37%) sepia(57%) saturate(4660%) hue-rotate(197deg) brightness(94%) contrast(106%);
 }
-img{
+#close_btn img{
         position:relative; top:28%; left:34%; z-index: 1;
       }
 #menu{
@@ -38,7 +39,6 @@ img{
 #viewimg{
     width: 384.8px; 
     height: 228px; 
-    /* height: 721.6px; */
     /* background: url("../../public/img/marker.png") no-repeat; */
     background: no-repeat;
     background-size: contain; background-position: 50% 50%;
@@ -66,15 +66,41 @@ img{
 }
 #peoplebox {
     width: 348.8px;
-    height: 58.45px;
-    padding: 16px 18px 14px;
+    height: 27px;
+    padding: 13px 18px 0px;
     text-align: center;
 }
-#peoplebox span{
+#people_cnt{
+    color: rgb(0,0,0);
+    text-align: center;
+    font-family : notosanskr,Malgun Gothic,맑은 고딕,Dotum,돋움,sans-serif;
+    /* font-family: -apple-system,BlinkMacSystemFont,helvetica,"Apple SD Gothic Neo",sans-serif; */
+    font-size: 17px;
+    letter-spacing: -0.3px;
+    cursor: pointer;
+}
+#timebox{
+    width: 348.8px;
+    height: 27px;
+    padding: 3px 18px 0px ;
+    text-align: center;
+}
+#time_now{
     color: rgb(0,0,0);
     text-align: center;
     font-family: -apple-system,BlinkMacSystemFont,helvetica,"Apple SD Gothic Neo",sans-serif;
-    font-size: 20px;
-    font-weight: 550;
-    letter-spacing: -1px;
+    font-size: 15px;
+    letter-spacing: -0.3px;
+    vertical-align: bottom;
+    display: inline-block;
+    padding: 0px 6px;
+}
+#timebox img{
+    vertical-align: bottom;
+    display: inline-block;
+    padding: 1px 6px;
+}
+#refresh:hover{
+   cursor: pointer;
+   filter: invert(37%) sepia(57%) saturate(4660%) hue-rotate(197deg) brightness(94%) contrast(106%);
 }
