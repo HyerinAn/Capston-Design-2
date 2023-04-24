@@ -1,15 +1,7 @@
 import React from "react";
 // import React, {useEffect, useState} from "react";
 import './navstyle.css';
-
-// function doDisplay(){
-//     var con = document.getElementById("first");
-//     if(con.style.display=="none"){
-//         con.style.display="block";
-//     }else{
-//         con.style.display="none";
-//     }
-// }
+import Chart from "./chartdrawing";
 
 function Makemenu(){
     return(
@@ -27,11 +19,17 @@ function Makemenu(){
                         <span id="time_now"></span>
                         <img id="refresh" src="/img/reload.png" width="17px" height="17px"></img>
                     </div>
+                    <div id="notifybox">
+                        <span id="notify">변동 사항이 없습니다.</span>
+                    </div>
+                    <div id="capimg"></div>
                 </div>
             </div>
             <div id="close_btn">
                 <img src="/img/x.png" width="15px" height="15px" alt="close"></img>
             </div>
+
+            <div id ="chart_wrap"></div>
         </div>
     )
 }

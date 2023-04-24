@@ -1,138 +1,46 @@
 import logo from './logo.svg';
 import './App.css';
 
-import React, {Children, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Makemenu from "./component/nav";
 import { firestore,database } from "./firebase";
-import $ from 'jquery';
 
 const { kakao } = window;
 
 function Kakao(){
-    const [windowDimension, detectW] = useState({
-        winWidth: window.innerWidth,
-        winHeight: window.innerHeight,
-      })
-  
-    const detectSize = () => {
-      detectW({
-        winWidth: window.innerWidth,
-        winHeight: window.innerHeight,
-      })
-    }
-  
-  useEffect(() => {
-  
-    const db = firestore.collection("map"); // firestore collection 접근
-    
-    var container = document.getElementById('map'), //지도를 담을 영역의 DOM 레퍼런스
-    options = { 
-          center: new kakao.maps.LatLng(33.450701, 126.570667), 
-          level: 10
-    };
-  
-    var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
-    
-    //처음에 옆에 창 안열리게 설정
-    document.getElementById("first").style.display="none";
-    //test위한 default 설정(디자인 확인하려고)
-    // document.getElementById("viewimg").style.backgroundImage='url("/place_img/용봉탑.png")';
-    // document.getElementById("place_name").innerHTML = '전남대 용봉탑';
-    // document.getElementById("people_cnt").innerHTML = 'test하는 중..';
+  // widnow 창 resize 조정 부분
+  const [windowDimension, detectW] = useState({
+    winWidth: window.innerWidth,
+    winHeight: window.innerHeight,
+  })
 
-  if (navigator.geolocation) {
-      
-    // GeoLocation을 이용해서 접속 위치 얻어옴
-    navigator.geolocation.getCurrentPosition(function(position) {
-        
-        var lat = position.coords.latitude, // 위도
-            lon = position.coords.longitude; // 경도
-        
-        var locPosition = new kakao.maps.LatLng(lat, lon); // 좌표 생성
-            message = '<div style="padding:5px;">여기에 계신가요?!</div>'
-        displayMarker(locPosition, message);
-      });
-    
-  } else {
-    var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),    
-        message = 'geolocation을 사용할수 없어요..'
-    displayMarker(locPosition, message);
+  const detectSize = () => {
+    detectW({
+      winWidth: window.innerWidth,
+      winHeight: window.innerHeight,
+    })
   }
-  
-  // 현위치 마커 표시 함수
-  function displayMarker(locPosition, message) {
 
-    // 마커를 생성합니다
-    var marker = new kakao.maps.Marker({  
-        map: map, 
-        position: locPosition
-    }); 
+useEffect(() => {
 
-    var iwContent = message, // 인포윈도우에 표시할 내용
-        iwRemoveable = true;
+  const container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+  const options = { 
+      center: new kakao.maps.LatLng(33.450701, 126.570667), 
+      level: 3
+      // 클러스터러 사용 시
+      // level: 10
+  };
 
-    // 인포윈도우를 생성합니다
-    var infowindow = new kakao.maps.InfoWindow({
-        content : iwContent,
-        removable : iwRemoveable
-    });
-    
-    // 인포윈도우를 마커위에 표시합니다 
-    infowindow.open(map, marker);
-  
-    // 지도 중심좌표를 접속위치로 변경합니다
-    map.setCenter(locPosition);      
-  }    
+  const map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 
-  // 마커 한개만 할 때 아래코드
-  // var imageSrc = "/img/marker.png", 
-  //       imageSize = new kakao.maps.Size(40,40), // 마커이미지의 크기
-  //       imageOption = {offset: new kakao.maps.Point(27, 69)}; 
-  
-  // var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
-  //       markerPosition = new kakao.maps.LatLng(35.1751, 126.9059);
-  
-  // var marker = new kakao.maps.Marker({
-  //   position : markerPosition,
-  //   image : markerImage
-  // });
+  const db = firestore.collection("map"); // firestore collection 접근
 
-  //사진 담을 div를 아이디로 불러옴
-  var viewimg = document.getElementById("viewimg");
-  //장소 이름 적을 span을 아이디로 불러옴
-  var place_name = document.getElementById("place_name");
-  place_name.appendChild(document.createTextNode(""));
-
-  //마커 여러개의 위치
-  var positions = [
-    {
-      num:0,
-      title:'전남대 용봉탑',
-      lating: new kakao.maps.LatLng(35.1751, 126.9059),
-      imageSrc:"/place_img/용봉탑.png"
-      // title:'동래역 자이 아파트 앞',
-      // lating: new kakao.maps.LatLng(35.20632793760689, 129.0807318037113),
-      // imageSrc:"/place_img/용봉탑.png"
-    },
-    {
-      num:1,
-      title:'도서관 정보마루',
-      lating: new kakao.maps.LatLng(35.1766, 126.9057),
-      imageSrc:"/place_img/정보마루.jpg"
-    },
-    {
-      num:2,
-      title:'공과대학 7호관',
-      lating: new kakao.maps.LatLng(35.1782, 126.9092),
-      imageSrc:"/place_img/공대7.jpg"
-    },
-    {
-      num:3,
-      title:'전남대학교 생활관',
-      lating: new kakao.maps.LatLng(35.1809, 126.9054),
-      imageSrc:"/place_img/기숙사.png"
-    }
-  ];
+  //처음에 옆에 창 안열리게 설정
+  document.getElementById("first").style.display="none";
+  //처음에 변동 사항이 없습니다. 알림 안뜨게 설정
+  document.getElementById("notify").style.display="none";
+  //처음에 캡쳐한 이미지 안뜨게 설정
+  document.getElementById("capimg").style.display="none";
 
   var linePaths = [
     {
@@ -162,28 +70,9 @@ function Kakao(){
       ]
     }
   ];
-  
-  //클러스터러 위해서 존재하는 마크를 다 담음
-  var markers = [];
-  var imageSrc = "/img/marker.png"
-  var imageSize = new kakao.maps.Size(40,40);
-  var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
-  var polylines = [];
-  var lines = [];
-
-  //마커 여러개 만드는 코드
-  for(var i=0; i<positions.length; i++){
-    var marker = new kakao.maps.Marker({
-      map:map,
-      position : positions[i].lating,
-      title : positions[i].title, 
-      image:markerImage
-    });
-
-    // 지도에 표시할 선을 생성합니다
+  // 지도에 표시할 선을 생성합니다
   var polyline = new kakao.maps.Polyline({
-    path: linePaths[i].linePath, // 선을 구성하는 좌표배열 입니다
     strokeWeight: 6, // 선의 두께 입니다
     strokeColor: '#386de8', // 선의 색깔입니다
     strokeOpacity: 1.0, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
@@ -191,139 +80,228 @@ function Kakao(){
   });
 
   var line = new kakao.maps.Polyline({
-    path: linePaths[i].linePath, // 선을 구성하는 좌표배열 입니다
+    // path: linePaths[i].linePath, // 선을 구성하는 좌표배열 입니다
     strokeWeight: 7.5, // 선의 두께 입니다
     strokeColor: 'black', // 선의 색깔입니다
     strokeOpacity: 1.0, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
     strokeStyle: 'solid' // 선의 스타일입니다
   });
 
-  //오버레이를 element 생성하여 만듦(그래야 오버레이 닫아짐)
-  // var content = document.createElement('div');
-  // content.className = "customoverlay";
-  // var anchor = document.createElement('a');
-  // anchor.href = 'https://map.kakao.com/link/map/11394059';
-  // anchor.target="_blank"
-  // content.appendChild(anchor);
-  // var info = document.createElement('span');
-  // info.className = "title";
-  // info.appendChild(document.createTextNode(positions[i].title))
-  // anchor.appendChild(info);
-  // var closeBtn = document.createElement('button');
-  // closeBtn.appendChild(document.createTextNode('닫기'));
-  // content.appendChild(closeBtn);
+  // firestore에 있는 data 불러오는 부분 -> 해당 data 이용하는 함수 생성 시 이 안에서 짜야함
+  db.get().then((result) => { result.forEach( (allDoc) => {
 
-  // var overlay = new kakao.maps.CustomOverlay({
-  //   content: content,
-  //   position: marker.getPosition() 
-  // });
+    console.log(allDoc.data());
+    
+    //cctv 좌표
+    const cctvPosition = new kakao.maps.LatLng(allDoc.data().latitude, allDoc.data().longitude);
+    console.log(allDoc.data());
 
-    markers.push(marker);
-    polylines.push(polyline);
-    lines.push(line);
+    // cctvmarker 마우스오버 시 그려질 circle animation 부분
+    var content = '<div id = "cctvmarker">';
+    content += '<div class ="dot" style="animation-delay: -3s">';
+    content += '</div><div class ="dot" style="animation-delay: -2s"></div>'; 
+    content += '<div class ="dot" style="animation-delay: -1s"></div>';
+    content += '<div class ="dot" style="animation-delay: 0s"></div>';
+    content += '<div/>';
 
-    // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
-    // 이벤트 리스너로는 클로저를 만들어 등록합니다 
-    // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-    // kakao.maps.event.addListener(marker, 'click', clicklistener(map, overlay)); 
-    // closeBtn.addEventListener('click', makeOutListener(overlay));
-    // kakao.maps.event.addListener(marker, 'mouseover', clicklistener(map, overlay)); 
-    // kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(overlay)); 
-    kakao.maps.event.addListener(marker, 'click', openwd(positions[i].imageSrc, positions[i].title, i, polylines, lines));
+    // circle 그리는 함수
+    var cctvInfo = new kakao.maps.CustomOverlay({
+      position: cctvPosition,
+      content: content,
+  });
+
+  var cctvimg = '/img/cctv.png';
+
+  displayCCTVMarker(cctvPosition, cctvimg);
+
+  var mylocationimg = '/img/marker.png';
+  
+  if (navigator.geolocation) {
+      
+    // GeoLocation을 이용해서 접속 위치 얻어옴
+    navigator.geolocation.getCurrentPosition(function(position) {
+        
+        var lat = position.coords.latitude, // 위도
+            lon = position.coords.longitude; // 경도
+        
+        var locPosition = new kakao.maps.LatLng(lat, lon); // 좌표 생성
+     
+        displayMarker(locPosition, mylocationimg);
+    });
+    
+  } else {
+    var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),    
+        message = '위치 추적'
+    
+    displayMarker(locPosition, mylocationimg);
+  }
+  
+  // 현위치 마커 표시 함수
+  function displayMarker(locPosition, imageaddress) {
+  
+    var imageSrc = imageaddress;
+    var imageSize = new kakao.maps.Size(40,40);
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+    
+    // 현위치 마커를 생성
+    var marker = new kakao.maps.Marker({  
+        map: map, 
+        position: locPosition,
+        image: markerImage
+    }); 
+  
+    // 중심좌표를 접속위치로 변경
+    map.setCenter(locPosition);     
   }
 
-  // 마커 클러스터러를 생성합니다 
-  var clusterer = new kakao.maps.MarkerClusterer({
-    map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
-    averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
-    minLevel: 5 // 클러스터 할 최소 지도 레벨 
+    //사진 담을 div를 아이디로 불러옴
+    var viewimg = document.getElementById("viewimg");
+    //장소 이름 적을 span을 아이디로 불러옴
+    var place_name = document.getElementById("place_name");
+    place_name.appendChild(document.createTextNode(""));
+    //캡쳐한 영상 담을 div를 아이디로 불러옴
+    var capimg = document.getElementById("capimg");
+
+    // CCTV 마커 표시 함수
+    function displayCCTVMarker(cctvPosition, imageaddress) {
+  
+      var imageSrc = imageaddress;
+      var imageSize = new kakao.maps.Size(40,40);
+      var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+      
+      // cctvmarker 생성
+      var cctvmarker = new kakao.maps.Marker({  
+          map: map, 
+          position: cctvPosition,
+          title: allDoc.data().title,
+          image: markerImage,
+          zIndex: 2,
+      }); 
+
+      map.setCenter(cctvPosition); 
+
+      // 클러스터러 그릴 마커 넣기
+      var markers = [];
+      markers.push(cctvmarker);
+
+      // // 마커 클러스터러 생성
+      // var clusterer = new kakao.maps.MarkerClusterer({
+      //   map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
+      //   averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
+      //   minLevel: 5 // 클러스터 할 최소 지도 레벨 
+      // });
+
+      // clusterer.addMarkers(markers);
+      
+      // 옆에 창 여는 클로저를 만드는 함수
+      function openwd(src, name, i) {
+        var place_name = document.getElementById("place_name");
+        return function(){
+          document.getElementById("first").style.display="block";
+          viewimg.style.backgroundImage="url("+src+")";
+          document.getElementById("place_name").innerHTML = name;
+          var db = database.ref('hyein_test');
+          db.once('value').then(function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+              //childsnapshot.key = 장소 이름임 (예:전남대 용봉탑)
+              if(childSnapshot.key == place_name.innerHTML){
+                var db_place = childSnapshot.ref.limitToLast(1);
+                //db_place는 장소 밑에 있는 시간에 접근함, limitTolast는 제일 최근 데이터 1개만 불러옴
+                db_place.once('value').then((snapshot)=>{
+                  snapshot.forEach((childSnapshot)=>{
+                    //childsnapshot.key = 시간임 (예 : 4-3_23:03:00)
+                    //childsnapshot.val() = {인구수:x, url:y}
+                    var info = childSnapshot.val();
+                    document.getElementById("people_cnt").innerHTML = "유동 인구 수 : " + info['유동 인구 수'] + "명";
+                    capimg.style.backgroundImage="url("+info['data_url']+")";
+                    document.getElementById("time_now").innerHTML = childSnapshot.key;
+                  })
+                })
+              }
+            })
+          })
+          var change_db;
+          db.on('child_changed', (data)=>{
+            change_db = data;
+          })
+          document.getElementById("refresh").addEventListener('click',()=>{
+            if(typeof(change_db) == 'undefined'){
+              document.getElementById("notify").style.display = "block";
+              setTimeout(()=>{document.getElementById("notify").style.display = "none";},1000);
+            }
+            else{
+              if(change_db.key == place_name.innerHTML){
+                var change_db_place = change_db.ref.limitToLast(1);
+                change_db_place.once('value').then((snapshot)=>{
+                  snapshot.forEach((childSnapshot)=>{
+                    document.getElementById("people_cnt").innerHTML = 
+                    "유동 인구 수 : " + childSnapshot.val()['유동 인구 수'] + "명";
+                    document.getElementById("time_now").innerHTML = childSnapshot.key;
+                    capimg.style.backgroundImage="url("+childSnapshot.val()['data_url']+")";
+                    change_db = undefined
+                  })
+                })
+              }
+              else{
+                document.getElementById("notify").style.display = "block";
+                setTimeout(()=>{document.getElementById("notify").style.display = "none";},1000);
+                change_db = undefined
+              }
+            }
+          })
+          line.setPath(linePaths[i].linePath);
+          polyline.setPath(linePaths[i].linePath);
+          document.getElementById("people_cnt").addEventListener('click',()=>{
+            line.setMap(map);
+            polyline.setMap(map);
+            document.getElementById("capimg").style.display="block";
+          });
+        }
+      }
+
+  function close_line(polyline, line){
+    return function(){
+      line.setMap(null);
+      polyline.setMap(null);
+      document.getElementById("capimg").style.display="none";
+    }
+  }  
+
+  var close_btn = document.getElementById("close_btn");
+  close_btn.addEventListener('click',function(){
+    document.getElementById("first").style.display="none";
+  })
+
+kakao.maps.event.addListener(cctvmarker, 'click', close_line(polyline, line));
+kakao.maps.event.addListener(cctvmarker, 'click', openwd(allDoc.data().imgsrc, allDoc.data().title, allDoc.data().num));  
+
+ // cctvmarker 마우스오버 시 circle animation 그려짐
+kakao.maps.event.addListener(cctvmarker, 'mouseover', function() {
+  cctvInfo.setMap(map);
 });
 
-  clusterer.addMarkers(markers);
-  
-  // 오버레이를 표시하는 클로저를 만드는 함수입니다 
-function clicklistener(map, overlay) {
-  return function(){
-  overlay.setMap(map);
+// 마우스아웃 시 circle 사라짐
+kakao.maps.event.addListener(cctvmarker, 'mouseout', function() {
+  cctvInfo.setMap(null);
+});
+   
+  }    
+}); 
+});
+
+  window.addEventListener('resize', detectSize)
+  return() => {
+    window.removeEventListener('resize', detectSize)
   }
+
+}, [windowDimension])
+
+  return(
+  <div>
+    <div id='map'style={{width:'100%', height:'100vh', position: 'relative'}}></div>
+    <Makemenu></Makemenu>
+  </div>
+  )
 }
-// 오버레이를 닫는 클로저를 만드는 함수입니다 
-function makeOutListener(overlay) {
-  return function(){
-    overlay.setMap(null);
-    }
-}
-
-// 옆에 창 여는 클로저를 만드는 함수
-function openwd(src, name, i, polylines, lines) {
-  return function(){
-    document.getElementById("first").style.display="block";
-    viewimg.style.backgroundImage="url("+src+")";
-    document.getElementById("place_name").innerHTML = name;
-    const db = database.ref('hyein_test');
-    db.once('value').then(function(snapshot){
-      snapshot.forEach(function(childSnapshot){
-        // == name으로 해도 됨
-        if(childSnapshot.key == i){
-          // console.log(childSnapshot.key);
-          var people_info = childSnapshot.val()
-          for (const [key, value] of Object.entries(people_info)){
-                  document.getElementById("people_cnt").innerHTML = "유동 인구 수 : " + value + "명";
-                  document.getElementById("time_now").innerHTML = key;
-                }
-        }
-      })
-      })
-      document.getElementById("people_cnt").addEventListener('click',viewline(i));
-      document.getElementById("people_cnt").addEventListener('click',()=>{
-        lines[i].setMap(map);
-        polylines[i].setMap(map);
-      });
-  }
-}
-
-function viewline(i){
-  var polyline = new kakao.maps.Polyline({
-    path: linePaths[i].linePath, // 선을 구성하는 좌표배열 입니다
-    strokeWeight: 6, // 선의 두께 입니다
-    strokeColor: '#386de8', // 선의 색깔입니다
-    strokeOpacity: 1.0, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-    strokeStyle: 'solid' // 선의 스타일입니다
-  });
-
-  var line = new kakao.maps.Polyline({
-    path: linePaths[i].linePath, // 선을 구성하는 좌표배열 입니다
-    strokeWeight: 7.5, // 선의 두께 입니다
-    strokeColor: 'black', // 선의 색깔입니다
-    strokeOpacity: 1.0, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-    strokeStyle: 'solid' // 선의 스타일입니다
-  });
-  line.setMap(null);
-  polyline.setMap(null);
-}
-
-
-//닫기 버튼 누르면 옆에 창 사라지게 함
-var close_btn = document.getElementById("close_btn");
-close_btn.addEventListener('click',function(){
-    document.getElementById("first").style.display="none";
-})
-
-// viewimg.style.backgroundImage='url("/img/marker.png")';
-
-    window.addEventListener('resize', detectSize)
-    return() => {
-      window.removeEventListener('resize', detectSize)
-    }
-  
-  }, [windowDimension])
-  
-    return(  
-      <div>
-        <div id='map'style={{width:'100%', height:'100vh', position:'relative'}}></div>
-        <Makemenu></Makemenu>
-      </div>
-      )
-  }
 
 export default Kakao;
