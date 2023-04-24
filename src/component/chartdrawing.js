@@ -1,41 +1,99 @@
 import styled from 'styled-components';
-import { Line } from 'react-chartjs-2';
+import { Line, Bar, getElementAtEvent } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 
 
-
-const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-      {
-        type: 'line',
-        label: 'Dataset 1',
-        borderColor: 'rgb(54, 162, 235)',
-        borderWidth: 2,
-        data: [1, 2, 3, 4, 5],
-      },
-      {
-        type: 'bar',
-        label: 'Dataset 2',
-        backgroundColor: 'rgb(255, 99, 132)',
+const HourData = {
+  type: 'bar',
+    labels: ['01', '02', '03', '04', '05', '06'],
+    datasets: [{
+        label: 'HOUR',
+        backgroundColor: 'rgb(135,206,250)', // lightskyblue
         data: [1, 2, 3, 4, 5, 6],
-        borderColor: 'red',
-        borderWidth: 2,
-      },
-      {
-        type: 'bar',
-        label: 'Dataset 3',
-        backgroundColor: 'rgb(75, 192, 192)',
-        data: [1, 2, 3, 4, 5, 6],
+        hoverBackgroundColor: 'rgb(30,144,255)', //dodgerblue
+        //hoverBorderColor: 'rgb(30,144,255)',
       },
     ],
   };
 
+  const MinuteData = {
+    type: 'bar',
+    labels: [10, 20, 30, 40, 50, 60],
+    datasets: [
+      {
+        label: 'MINUTE',
+        backgroundColor: 'rgb(135,206,250)', // lightskyblue
+        data: [
+          1, 2, 3, 4, 5, 6
+        ],
+        hoverBackgroundColor: 'rgb(30,144,255)', //dodgerblue
+      }
+    ]
+  }
+
+  const config = {
+    type: 'bar',
+    data: HourData,
+    options: {
+      scales: {
+        x: {
+          stacked: true
+        },
+        y: {
+          stacked: true,
+          beginZero: true
+        }
+      }
+    }
+  };
+
+  const config2 = {
+    type: 'bar',
+    data: MinuteData,
+    options: {
+      scales: {
+        y: {
+          beginZero: true
+        }
+      }
+    }
+  };
+
+  // const ctx = document.getElementById('HourChart');
+  // const HourChart = new Chart(
+  //   ctx,
+  //   config
+  // );
+
+// const ctx2 = document.getElementById('MinuteChart');
+//   const MinuteChart = new Chart(
+//     ctx2,
+//     config2
+//   );
+
+  // function clickHanler(click){
+  //   const points = HourChart.getElementsAtEventForMode(click, 'nearest', {
+  //     intersect: true}, true);
+  //     console.log(points.length);
+  //     // if(points.length == 1){
+        
+  //     //   const bg = points[0].element.options.backgroundColor;
+  //     //   const bc = points[0].element.options.borderColor;
+  //     //   const label = points[0].element.$contest.raw.x;
+
+  //     //   MinuteChart.config.data.datasets[0].backgroundColor = bg;
+  //     //   MinuteChart.update();
+  //     // }
+  //   }
+  //   ctx.onclick = clickHanler;
+
 function Chartdraw (){
+
   return (
- 
+    
     <Container>
-    <Line type="line" data={data} />
+    <Bar type = 'bar' data={HourData}/>
+    <Bar type = 'bar' data={MinuteData}/>
   </Container>
   
   );
@@ -48,4 +106,4 @@ width: 348.8px;
 
 `;
 
-
+ 
