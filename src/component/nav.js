@@ -2,6 +2,8 @@ import React from "react";
 // import React, {useEffect, useState} from "react";
 import './navstyle.css';
 import Chart from "./chartdrawing";
+import InitialChart from "./initialchart";
+
 
 
 function Makemenu(){
@@ -26,8 +28,7 @@ function Makemenu(){
                 </div>
                 <div id="capimg"></div>
                 <div id="chart">
-                        <Chart></Chart>
-                    
+                <InitialChart></InitialChart>
                     </div>
             </div>
         </div>

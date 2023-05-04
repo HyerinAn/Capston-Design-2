@@ -90,19 +90,23 @@ useEffect(() => {
   // firestore에 있는 data 불러오는 부분 -> 해당 data 이용하는 함수 생성 시 이 안에서 짜야함
   db.get().then((result) => { result.forEach( (allDoc) => {
 
-    console.log(allDoc.data());
+    // console.log(allDoc.data());
     
     //cctv 좌표
     const cctvPosition = new kakao.maps.LatLng(allDoc.data().latitude, allDoc.data().longitude);
-    console.log(allDoc.data());
+    // console.log(allDoc.data());
+
+    
+    var colorinfo = 'red';
 
     // cctvmarker 마우스오버 시 그려질 circle animation 부분
     var content = '<div id = "cctvmarker">';
-    content += '<div class ="dot" style="animation-delay: -3s">';
+    content += '<div class ="dot" style="animation-delay: -3s; background-color:';
+    content += colorinfo + '">';
     content += '</div><div class ="dot" style="animation-delay: -2s"></div>'; 
     content += '<div class ="dot" style="animation-delay: -1s"></div>';
     content += '<div class ="dot" style="animation-delay: 0s"></div>';
-    content += '<div/>';
+    content += '</div>';
 
     // circle 그리는 함수
     var cctvInfo = new kakao.maps.CustomOverlay({

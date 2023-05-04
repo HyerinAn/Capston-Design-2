@@ -2,6 +2,7 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import "firebase/compat/database";
 
+
 const firebaseConfig = {
     // firebase 설정과 관련된 개인 정보
     apiKey: "AIzaSyBJiNAHVrH3ct3jhbGvkNDGshpG68SMqlk",

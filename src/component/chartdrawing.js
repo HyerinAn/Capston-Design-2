@@ -1,6 +1,35 @@
 import styled from 'styled-components';
 import { Line, Bar, getElementAtEvent } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
+// import { firestore, database } from "./src/firebase";
+
+// const db = firestore.collection("map");
+
+// var place_name = document.getElementById("place_name");
+// place_name.appendChild(document.createTextNode(""));
+// //캡쳐한 영상 담을 div를 아이디로 불러옴
+// var capimg = document.getElementById("capimg");
+
+// db.once('value').then(function(snapshot){
+//   snapshot.forEach(function(childSnapshot){
+//     //childsnapshot.key = 장소 이름임 (예:전남대 용봉탑)
+//     if(childSnapshot.key == place_name.innerHTML){
+//       var db_place = childSnapshot.ref.limitToLast(1);
+//       //db_place는 장소 밑에 있는 시간에 접근함, limitTolast는 제일 최근 데이터 1개만 불러옴
+//       db_place.once('value').then((snapshot)=>{
+//         snapshot.forEach((childSnapshot)=>{
+//           //childsnapshot.key = 시간임 (예 : 4-3_23:03:00)
+//           //childsnapshot.val() = {인구수:x, url:y}
+//           var info = childSnapshot.val();
+//           document.getElementById("people_cnt").innerHTML = "유동 인구 수 : " + info['유동 인구 수'] + "명";
+//           capimg.style.backgroundImage="url("+info['data_url']+")";
+//           document.getElementById("time_now").innerHTML = childSnapshot.key;
+//           console.log(childSnapshot.key);
+//         })
+//       })
+//     }
+//   })
+// })
 
 
 const HourData = {
