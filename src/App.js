@@ -3,7 +3,9 @@ import './App.css';
 
 import React, {useEffect, useState} from "react";
 import Makemenu from "./component/nav";
+import Makestandard from "./component/standard";
 import { firestore,database } from "./firebase";
+import $ from 'jquery';
 
 const { kakao } = window;
 
@@ -41,6 +43,12 @@ useEffect(() => {
   document.getElementById("notify").style.display="none";
   //처음에 캡쳐한 이미지 안뜨게 설정
   document.getElementById("capimg").style.display="none";
+  //처음에 옆창(도표창) 안뜨게 설정
+  document.getElementById("chart_wrap").style.display="none";
+  //옆에 x창(두번째 x창) 안뜨게 설정
+  document.getElementById("close_btn2").style.display="none";
+
+  document.getElementById("popup").style.display="block";
 
   var linePaths = [
     {
@@ -102,7 +110,7 @@ useEffect(() => {
     content += '</div><div class ="dot" style="animation-delay: -2s"></div>'; 
     content += '<div class ="dot" style="animation-delay: -1s"></div>';
     content += '<div class ="dot" style="animation-delay: 0s"></div>';
-    content += '<div/>';
+    content += '</div>';
 
     // circle 그리는 함수
     var cctvInfo = new kakao.maps.CustomOverlay({
@@ -205,16 +213,21 @@ useEffect(() => {
             snapshot.forEach(function(childSnapshot){
               //childsnapshot.key = 장소 이름임 (예:전남대 용봉탑)
               if(childSnapshot.key == place_name.innerHTML){
-                var db_place = childSnapshot.ref.limitToLast(1);
+                var db_place = childSnapshot.ref.limitToLast(2);
                 //db_place는 장소 밑에 있는 시간에 접근함, limitTolast는 제일 최근 데이터 1개만 불러옴
                 db_place.once('value').then((snapshot)=>{
                   snapshot.forEach((childSnapshot)=>{
                     //childsnapshot.key = 시간임 (예 : 4-3_23:03:00)
-                    //childsnapshot.val() = {인구수:x, url:y}
-                    var info = childSnapshot.val();
-                    document.getElementById("people_cnt").innerHTML = "유동 인구 수 : " + info['유동 인구 수'] + "명";
-                    capimg.style.backgroundImage="url("+info['data_url']+")";
+                    //childsnapshot.val() = {인구수:x, url:y} => 예전 형식
+                    //childsnapshot.val() = 인구 수 => 현재 방식
+                    // var info = childSnapshot.val();
+                    if(childSnapshot.key == 'data_url') {
+                    capimg.style.backgroundImage="url("+childSnapshot.val()+")";
+                    }
+                    else{
+                    document.getElementById("people_cnt").innerHTML = "유동 인구 수 : " + childSnapshot.val() + "명";
                     document.getElementById("time_now").innerHTML = childSnapshot.key;
+                    }
                   })
                 })
               }
@@ -231,14 +244,19 @@ useEffect(() => {
             }
             else{
               if(change_db.key == place_name.innerHTML){
-                var change_db_place = change_db.ref.limitToLast(1);
+                var change_db_place = change_db.ref.limitToLast(2);
                 change_db_place.once('value').then((snapshot)=>{
                   snapshot.forEach((childSnapshot)=>{
-                    document.getElementById("people_cnt").innerHTML = 
-                    "유동 인구 수 : " + childSnapshot.val()['유동 인구 수'] + "명";
-                    document.getElementById("time_now").innerHTML = childSnapshot.key;
-                    capimg.style.backgroundImage="url("+childSnapshot.val()['data_url']+")";
-                    change_db = undefined
+                    if(childSnapshot.key == 'data_url'){
+                      capimg.style.backgroundImage="url("+childSnapshot.val()+")";
+                      change_db = undefined
+                    }
+                    else{
+                      document.getElementById("people_cnt").innerHTML = 
+                      "유동 인구 수 : " + childSnapshot.val() + "명";
+                      document.getElementById("time_now").innerHTML = childSnapshot.key;
+                      change_db = undefined
+                    }
                   })
                 })
               }
@@ -267,8 +285,22 @@ useEffect(() => {
     }
   }  
 
-  var close_btn = document.getElementById("close_btn");
-  close_btn.addEventListener('click',function(){
+  //창 1개만 닫히게 테스트중
+  var close_btn1 = document.getElementById("close_btn1");
+  var close_btn2 = document.getElementById("close_btn2");
+  var chart_btn = document.getElementById("chart1");
+
+ chart_btn.addEventListener('click',()=>{
+    document.getElementById("chart_wrap").style.display="block";
+    close_btn2.style.display="block";
+    close_btn1.style.display="none";
+  })
+  close_btn2.addEventListener('click',()=>{
+    document.getElementById("chart_wrap").style.display="none";
+    close_btn2.style.display="none";
+    close_btn1.style.display="block";
+  })
+  close_btn1.addEventListener('click',()=>{
     document.getElementById("first").style.display="none";
   })
 
@@ -278,7 +310,78 @@ kakao.maps.event.addListener(cctvmarker, 'click', openwd(allDoc.data().imgsrc, a
  // cctvmarker 마우스오버 시 circle animation 그려짐
 kakao.maps.event.addListener(cctvmarker, 'mouseover', function() {
   cctvInfo.setMap(map);
+  change_color(cctvmarker.getTitle());
 });
+
+function change_color(title){
+  var db = database.ref('hyein_test');
+      db.once('value').then(function(snapshot){
+        snapshot.forEach(function(childSnapshot){
+          if(childSnapshot.key == title){
+            var db_place = childSnapshot.ref.limitToLast(1);
+            db_place.once('value').then((snapshot)=>{
+              snapshot.forEach((childSnapshot)=>{
+                if(Number(childSnapshot.val()) <= 2){
+                  $('.dot').css('background-color', '#00D369');
+                  // cctvInfo.setContent(
+                  //       '<div id = "cctvmarker">' +
+                  //       '<div class ="dot" style="animation-delay: -3s; background-color: red">' +
+                  //       '</div><div class ="dot" style="animation-delay: -2s; background-color: red"></div>'+
+                  //       '<div class ="dot" style="animation-delay: -1s; background-color: red"></div>' +
+                  //       '<div class ="dot" style="animation-delay: 0s; background-color: red"></div>' +
+                  //       '</div>'
+                  // )
+                }
+                else if(Number(childSnapshot.val()) <= 3){
+                  $('.dot').css('background-color', '#FFB100');
+                }
+                else if(Number(childSnapshot.val()) <= 5){
+                  $('.dot').css('background-color', '#FF8040');
+                }
+                else if(Number(childSnapshot.val()) <= 6){
+                  $('.dot').css('background-color', '#DD1F3D');
+                }
+                else{
+                  $('.dot').css('background-color', '#800000');
+                }
+              })
+            })
+          }
+        })
+      })
+      var change_db;
+        db.on('child_changed', (data)=>{
+          change_db = data;
+        })
+        if(typeof(change_db) == 'undefined'){}
+        else{
+          if(change_db.key == title){
+            var change_db_place = change_db.ref.limitToLast(1);
+              change_db_place.once('value').then((snapshot)=>{
+                snapshot.forEach((childSnapshot)=>{
+                  if(Number(childSnapshot.val()) <= 2){
+                    $('.dot').css('background-color', '#00D369');
+                  }
+                  else if(Number(childSnapshot.val()) <= 3){
+                    $('.dot').css('background-color', '#FFB100');
+                  }
+                  else if(Number(childSnapshot.val()) <= 5){
+                    $('.dot').css('background-color', '#FF8040');
+                  }
+                  else if(Number(childSnapshot.val()) <= 6){
+                    $('.dot').css('background-color', '#DD1F3D');
+                  }
+                  else{
+                    $('.dot').css('background-color', '#800000');
+                  }
+                })
+              })
+          }
+          else{
+            change_db = undefined
+          }
+        }
+}
 
 // 마우스아웃 시 circle 사라짐
 kakao.maps.event.addListener(cctvmarker, 'mouseout', function() {
@@ -300,6 +403,7 @@ kakao.maps.event.addListener(cctvmarker, 'mouseout', function() {
   <div>
     <div id='map'style={{width:'100%', height:'100vh', position: 'relative'}}></div>
     <Makemenu></Makemenu>
+    <Makestandard></Makestandard>
   </div>
   )
 }

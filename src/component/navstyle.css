@@ -1,11 +1,11 @@
 @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css); 
 #first{
-        position:absolute;top:0;left:0;bottom:0;width:433px;z-index: 1;
+        position:absolute;top:0;left:0;bottom:0;width:433px;z-index: 2;
       }
 #menu_wrap {position:absolute;top:0;left:0;bottom:0;width:390px;
-        background:#fff; z-index: 1;overflow-x:hidden; overflow-y:auto;
+        background:#fff; z-index: 2;overflow-x:hidden; overflow-y:auto;
         box-shadow: 0 0 5px 0 rgba(0,0,0,.2),
-        5px 0 15px 0 rgba(0,0,0,.2);
+        5px 0 15px 0 #00000033;
         box-sizing: border-box;
     }
     #menu_wrap::-webkit-scrollbar{
@@ -18,20 +18,20 @@
     #menu_wrap::-webkit-scrollbar-track-piece{
         background: #e9ecef;
     }
-#close_btn {
-        position:absolute;left:780px;height: 44px; top:75px;
-        width:43px; background:#fff; border-radius: 0 4px 4px 0; z-index: 1;
+#close_btn1{
+        position:absolute;left:390px;height: 44px; top:75px;
+        width:43px; background:#fff; border-radius: 0 4px 4px 0; z-index: 2;
         border: 1px solid rgba(0,0,0,.2); border-left: 0; cursor: pointer;
         box-shadow: 0 3px 7px 0 rgba(0,0,0,.2);
       }
-#close_btn:hover{
+#close_btn1:hover{
         border: 1px solid #0475f4; border-left: 0;
       }
-#close_btn:hover img{
+#close_btn1:hover img{
     filter: invert(37%) sepia(57%) saturate(4660%) hue-rotate(197deg) brightness(94%) contrast(106%);
 }
-#close_btn img{
-        position:relative; top:28%; left:34%; z-index: 1;
+#close_btn1 img{
+        position:relative; top:28%; left:34%; z-index: 2;
       }
 #menu{
         width: 384.8px; height: 721.9px; z-index: inherit
@@ -124,13 +124,13 @@
 }
 #capimg{
     width: 384.8px; 
-    height: 228px; 
+    height: 228px;
     /* background: url("https://storage.googleapis.com/capstone2-fad5e.appspot.com/hyein_pic_test/04-06_19%3A28%3A54") no-repeat; */
     background: no-repeat;
     background-size: contain; background-position: 50% 50%;
 }
 #chart_wrap {position:absolute;top:0;left:390px;bottom:0;width:390px;
-    background:#fff; z-index: 1;overflow-x:hidden; overflow-y:auto;
+    background:#fff; z-index: 2;overflow-x:hidden; overflow-y:auto;
     box-shadow: 0 0 5px 0 rgba(0,0,0,.2),
     5px 0 15px 0 rgba(0,0,0,.2);
     box-sizing: border-box;
@@ -151,60 +151,26 @@
     padding: 16px 18px 14px;
     text-align: center;
 }
-
-/* 접었다폈다 테스트 중 */
-#panel{
-    display: block;
-    position: absolute; top: 0; left: 0; bottom: 0; z-index: 1;
-    width: 780.8px; height: 100%;
+/* 창열기 테스트 중 */
+#test_button{
+    text-align: center;
+    cursor: pointer;
 }
-#panel_wrap{
-    position: relative; background: #fff; height: 100%; width: 100;
-    box-shadow: 0 0 5px 0 rgba(0,0,0,.2), 5px 0 15px 0 rgba(0,0,0,.1);
-    display: block;
+#close_btn2{
+    position:absolute;left:780px;height: 44px; top:75px;
+    width:43px; background:#fff; border-radius: 0 4px 4px 0; z-index: 2;
+    border: 1px solid rgba(0,0,0,.2); border-left: 0; cursor: pointer;
+    box-shadow: 0 3px 7px 0 rgba(0,0,0,.2);
+  }
+#close_btn2:hover{
+    border: 1px solid #0475f4; border-left: 0;
+  }
+#close_btn2:hover img{
+filter: invert(37%) sepia(57%) saturate(4660%) hue-rotate(197deg) brightness(94%) contrast(106%);
 }
-#tab{
-    position: relative; display: flex; flex-basis: auto;
-    flex-grow: 1; flex-shrink: 1; height: 100%;
-}
-#entry_close{
-    position: absolute; left: 0; right: 0; top: 0; bottom: 0; 
-    height: 100%; 
-}
-#entry_close::before{
-    position: absolute; top: 0; left:0; bottom: 0; width: 1px;
-    background: hsla(0, 0%, 87.8%, .3);
-    content: "";
-}
-#entry_close::after{
-    overflow: hidden; display: inline-block;
-    width: 14px; height: 14px; vertical-align: top;
-    /* background-position: -40px -158px;  */
-    content: "";
-    color: transparent; font-size: 0;
-    background-image: url(https://ssl.pstatic.net/static/maps/v5/pc/20230216150825/search@2x.png);
-}
-#entry_close button{
-    position: absolute; right: -43px; top: 24px; width: 43px; height: 44px;
-    background: #fff; border: 1px solid rgba(0,0,0,.2);
-    border-left: 0; border-radius: 0 4px 4px 0;
-    font-size: 1px; line-height: 1px; box-shadow: 0 3px 7px 0 rgba(0,0,0,.2);
-    cursor: pointer; display: block; align-items: start;
-    background-image: url(https://ssl.pstatic.net/static/maps/v5/pc/20230216150825/search@2x.png);
-    background-position: -40px -158px;
-    background-size: 194px 190px;
-    border-image-outset: 0;
-    border-image-repeat: stretch;
-    border-image-source: none;
-    border-image-slice: 100%;
-    border-image-width: 1;
-}
-#main{
-    width: 390.8px; flex: none; flex-direction: column;
-    background: #fff; position: relative; display: flex;
-    border-left: 1px solid #ddd
-}
-#sub{
-    width: 390px; flex:none; flex-direction: column; 
-    background: #fff; position: relative; display: flex;
+#close_btn2 img{
+    position:relative; top:28%; left:34%; z-index: 2;
+  }
+#chart1 {
+    cursor: pointer;
 }

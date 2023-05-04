@@ -1,0 +1,5 @@
+#popup{
+    position:absolute;top:40px;left:30px;width:120px;z-index: 1;
+    padding-top: 5px; padding: 2px; font-size: 12px; border-radius: 6px;
+    background: white; box-shadow: 0 2px 4px 0 rgba(0,0,0,.12);
+}

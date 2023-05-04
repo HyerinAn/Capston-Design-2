@@ -23,13 +23,27 @@ function Makemenu(){
                         <span id="notify">변동 사항이 없습니다.</span>
                     </div>
                     <div id="capimg"></div>
+                    <div id="chart1">
+                        <Chart></Chart>
+                    </div>
                 </div>
             </div>
-            <div id="close_btn">
-                <img src="/img/x.png" width="15px" height="15px" alt="close"></img>
+
+            <div id ="chart_wrap">
+                <div id="chart2">
+                    <Chart></Chart>
+                    <Chart></Chart>
+                    <Chart></Chart>
+                    <Chart></Chart>
+                </div>
             </div>
 
-            <div id ="chart_wrap"></div>
+            <div id="close_btn1">
+                <img src="/img/x.png" width="15px" height="15px" alt="close"></img>
+            </div>
+            <div id="close_btn2">
+                <img src="/img/x.png" width="15px" height="15px" alt="close"></img>
+            </div>
         </div>
     )
 }
