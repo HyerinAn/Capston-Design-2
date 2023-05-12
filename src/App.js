@@ -1,3 +1,4 @@
+import ApexCharts from 'apexcharts'
 import logo from './logo.svg';
 import './App.css';
 
@@ -6,6 +7,10 @@ import Makemenu from "./component/nav";
 import Makestandard from "./component/standard";
 import { firestore,database } from "./firebase";
 import $ from 'jquery';
+// import { Chart } from 'chart.js';
+// import { Chart, registerables } from 'chart.js';
+// Chart.register(...registerables);
+
 
 const { kakao } = window;
 
@@ -208,12 +213,21 @@ useEffect(() => {
           document.getElementById("first").style.display="block";
           viewimg.style.backgroundImage="url("+src+")";
           document.getElementById("place_name").innerHTML = name;
+          var url_db = database.ref('hyein_test/url_test');
+          url_db.once('value').then(function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+              if(childSnapshot.key == place_name.innerHTML){
+                // console.log(childSnapshot.val()['data_url']);
+                capimg.style.backgroundImage="url("+childSnapshot.val()['data_url']+")";
+              }
+            })
+          })
           var db = database.ref('hyein_test');
           db.once('value').then(function(snapshot){
             snapshot.forEach(function(childSnapshot){
               //childsnapshot.key = 장소 이름임 (예:전남대 용봉탑)
               if(childSnapshot.key == place_name.innerHTML){
-                var db_place = childSnapshot.ref.limitToLast(2);
+                var db_place = childSnapshot.ref.limitToLast(1);
                 //db_place는 장소 밑에 있는 시간에 접근함, limitTolast는 제일 최근 데이터 1개만 불러옴
                 db_place.once('value').then((snapshot)=>{
                   snapshot.forEach((childSnapshot)=>{
@@ -221,13 +235,8 @@ useEffect(() => {
                     //childsnapshot.val() = {인구수:x, url:y} => 예전 형식
                     //childsnapshot.val() = 인구 수 => 현재 방식
                     // var info = childSnapshot.val();
-                    if(childSnapshot.key == 'data_url') {
-                    capimg.style.backgroundImage="url("+childSnapshot.val()+")";
-                    }
-                    else{
                     document.getElementById("people_cnt").innerHTML = "유동 인구 수 : " + childSnapshot.val() + "명";
                     document.getElementById("time_now").innerHTML = childSnapshot.key;
-                    }
                   })
                 })
               }
@@ -244,19 +253,21 @@ useEffect(() => {
             }
             else{
               if(change_db.key == place_name.innerHTML){
-                var change_db_place = change_db.ref.limitToLast(2);
+                var change_db_place = change_db.ref.limitToLast(1);
                 change_db_place.once('value').then((snapshot)=>{
                   snapshot.forEach((childSnapshot)=>{
-                    if(childSnapshot.key == 'data_url'){
-                      capimg.style.backgroundImage="url("+childSnapshot.val()+")";
-                      change_db = undefined
-                    }
-                    else{
-                      document.getElementById("people_cnt").innerHTML = 
-                      "유동 인구 수 : " + childSnapshot.val() + "명";
-                      document.getElementById("time_now").innerHTML = childSnapshot.key;
-                      change_db = undefined
-                    }
+                    document.getElementById("people_cnt").innerHTML = 
+                    "유동 인구 수 : " + childSnapshot.val() + "명";
+                    document.getElementById("time_now").innerHTML = childSnapshot.key;
+                    url_db.once('value').then(function(snapshot){
+                      snapshot.forEach(function(childSnapshot){
+                        if(childSnapshot.key == place_name.innerHTML){
+                          // console.log(childSnapshot.val()['data_url']);
+                          capimg.style.backgroundImage="url("+childSnapshot.val()['data_url']+")";
+                        }
+                      })
+                    })
+                    change_db = undefined
                   })
                 })
               }
@@ -285,6 +296,77 @@ useEffect(() => {
     }
   }  
 
+  //차트 함수 테스트
+  function draw_chart(name){
+    var db = database.ref('hyein_test');
+      var time = [];
+      var people = [];
+      var edit_time = [];
+      var edit_people = [];
+      db.once('value').then(function(snapshot){
+        console.log(snapshot.val()[name]);
+        var time_people = snapshot.val()[name];
+        time = Object.keys(time_people)
+        people = Object.values(time_people)
+        edit_time = time.slice(-6);
+        edit_people = people.slice(-6);
+        // console.log(list);
+        console.log(time);
+        console.log(people);
+
+  //차트 테스트
+  var options = {
+    series: [{
+    // data: [44, 55, 57, 56, 61, 58]
+    data : edit_people
+  }],
+    chart: {
+    type: 'bar',
+    height: 200
+  },
+  plotOptions: {
+    bar: {
+      horizontal: false,
+      columnWidth: '55%',
+      endingShape: 'rounded'
+    },
+  },
+  dataLabels: {
+    enabled: false
+  },
+  stroke: {
+    show: true,
+    width: 2,
+    colors: ['transparent']
+  },
+  xaxis: {
+    // categories: ['Jan','Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    categories: edit_time
+  },
+  yaxis: {
+    title: {
+      // text: '$ (thousands)'
+    }
+  },
+  fill: {
+    opacity: 1
+  },
+  tooltip: {
+    y: {
+      formatter: function (val) {
+        // return "$ " + val + " thousands"
+        return val + "명"
+      }
+    }
+  }
+  };
+  
+  var chart = new ApexCharts(document.querySelector("#chart"), options);
+  chart.render();
+  chart.resetSeries();
+  })
+}
+
   //창 1개만 닫히게 테스트중
   var close_btn1 = document.getElementById("close_btn1");
   var close_btn2 = document.getElementById("close_btn2");
@@ -303,9 +385,12 @@ useEffect(() => {
   close_btn1.addEventListener('click',()=>{
     document.getElementById("first").style.display="none";
   })
-
+close_btn1.addEventListener('click', close_line(polyline,line));
 kakao.maps.event.addListener(cctvmarker, 'click', close_line(polyline, line));
-kakao.maps.event.addListener(cctvmarker, 'click', openwd(allDoc.data().imgsrc, allDoc.data().title, allDoc.data().num));  
+kakao.maps.event.addListener(cctvmarker, 'click', openwd(allDoc.data().imgsrc, allDoc.data().title, allDoc.data().num));
+kakao.maps.event.addListener(cctvmarker, 'click', function(){
+  draw_chart(cctvmarker.getTitle());
+});
 
  // cctvmarker 마우스오버 시 circle animation 그려짐
 kakao.maps.event.addListener(cctvmarker, 'mouseover', function() {
@@ -388,7 +473,7 @@ kakao.maps.event.addListener(cctvmarker, 'mouseout', function() {
   cctvInfo.setMap(null);
 });
    
-  }    
+  }
 }); 
 });
 

@@ -1,7 +1,7 @@
 import React from "react";
 // import React, {useEffect, useState} from "react";
 import './navstyle.css';
-import Chart from "./chartdrawing";
+// import Chart from "./initialchart";
 
 function Makemenu(){
     return(
@@ -24,17 +24,19 @@ function Makemenu(){
                     </div>
                     <div id="capimg"></div>
                     <div id="chart1">
-                        <Chart></Chart>
+                        {/* <Chart></Chart> */}
+                        {/* <canvas id="myChart"></canvas> */}
+                        <div id="chart"></div>
                     </div>
                 </div>
             </div>
 
             <div id ="chart_wrap">
                 <div id="chart2">
+                    {/* <Chart></Chart>
                     <Chart></Chart>
                     <Chart></Chart>
-                    <Chart></Chart>
-                    <Chart></Chart>
+                    <Chart></Chart> */}
                 </div>
             </div>
 

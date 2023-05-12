@@ -128,6 +128,7 @@
     /* background: url("https://storage.googleapis.com/capstone2-fad5e.appspot.com/hyein_pic_test/04-06_19%3A28%3A54") no-repeat; */
     background: no-repeat;
     background-size: contain; background-position: 50% 50%;
+    margin-top: 20px;
 }
 #chart_wrap {position:absolute;top:0;left:390px;bottom:0;width:390px;
     background:#fff; z-index: 2;overflow-x:hidden; overflow-y:auto;
